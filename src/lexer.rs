@@ -94,3 +94,44 @@ impl Lexer {
         tokens
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_lexer_print() {
+        let mut lexer = Lexer::new("chapyati(\"Hello\")");
+        let tokens = lexer.tokenize();
+        assert_eq!(tokens, vec![
+            Token::Print,
+            Token::LeftParen,
+            Token::StringLiteral("Hello".to_string()),
+            Token::RightParen,
+            Token::EOF
+        ]);
+    }
+
+    #[test]
+    fn test_lexer_number() {
+        let mut lexer = Lexer::new("42");
+        let tokens = lexer.tokenize();
+        assert_eq!(tokens, vec![
+            Token::Number(42.0),
+            Token::EOF
+        ]);
+    }
+
+    #[test]
+    fn test_lexer_whitespace() {
+        let mut lexer = Lexer::new("   chapyati   (  \"Test\"  )   ");
+        let tokens = lexer.tokenize();
+        assert_eq!(tokens, vec![
+            Token::Print,
+            Token::LeftParen,
+            Token::StringLiteral("Test".to_string()),
+            Token::RightParen,
+            Token::EOF
+        ]);
+    }
+}

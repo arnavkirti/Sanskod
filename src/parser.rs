@@ -58,3 +58,46 @@ impl Parser {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_print() {
+        let tokens = vec![
+            Token::Print,
+            Token::LeftParen,
+            Token::StringLiteral("Hello".to_string()),
+            Token::RightParen,
+            Token::EOF
+        ];
+        let mut parser = Parser::new(tokens);
+        if let Some(ASTNode::Print(text)) = parser.parse() {
+            assert_eq!(text, "Hello");
+        } else {
+            panic!("Failed to parse print statement");
+        }
+    }
+
+    #[test]
+    fn test_parse_number() {
+        let tokens = vec![
+            Token::Number(42.0),
+            Token::EOF
+        ];
+        let mut parser = Parser::new(tokens);
+        if let Some(ASTNode::Number(num)) = parser.parse() {
+            assert_eq!(num, 42);
+        } else {
+            panic!("Failed to parse number");
+        }
+    }
+
+    #[test]
+    fn test_parse_invalid() {
+        let tokens = vec![Token::EOF];
+        let mut parser = Parser::new(tokens);
+        assert!(parser.parse().is_none());
+    }
+}

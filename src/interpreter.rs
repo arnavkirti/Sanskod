@@ -11,3 +11,22 @@ impl Interpreter {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_interpret_print() {
+        let node = ASTNode::Print("Hello".to_string());
+        // Note: This test will actually print to stdout
+        Interpreter::run(&node);
+    }
+
+    #[test]
+    fn test_interpret_number() {
+        let node = ASTNode::Number(42);
+        // Note: This test will actually print to stdout
+        Interpreter::run(&node);
+    }
+}
