@@ -32,7 +32,18 @@ impl Lexer {
                 '-' => tokens.push(Token::Minus),
                 '*' => tokens.push(Token::Multiply),
                 '/' => tokens.push(Token::Divide),
-                '=' => tokens.push(Token::Assign),
+                '=' => {
+                    if let Some(next_ch) = self.next_char() {
+                        if next_ch == '=' {
+                            tokens.push(Token::Equals);
+                        } else {
+                            self.position -= 1;
+                            tokens.push(Token::Assign);
+                        }
+                    } else {
+                        tokens.push(Token::Assign);
+                    }
+                },
                 '(' => tokens.push(Token::LeftParen),
                 ')' => tokens.push(Token::RightParen),
                 '{' => tokens.push(Token::LeftBrace),
@@ -68,12 +79,12 @@ impl Lexer {
                         }
                     }
                     match identifier.as_str() {
-                        "यदि" => tokens.push(Token::If),
-                        "अन्यथा" => tokens.push(Token::Else),
-                        "यावत्" => tokens.push(Token::While),
-                        "क्रिया" => tokens.push(Token::Function),
-                        "प्रत्यावर्तनम्" => tokens.push(Token::Return),
-                        "छपयति" => tokens.push(Token::Print),
+                        "yadi" => tokens.push(Token::If),
+                        "anyatha" => tokens.push(Token::Else),
+                        "yavat" => tokens.push(Token::While),
+                        "kriya" => tokens.push(Token::Function),
+                        "pratyavartanam" => tokens.push(Token::Return),
+                        "chapyati" => tokens.push(Token::Print),
                         _ => tokens.push(Token::Identifier(identifier)),
                     }
                 }
