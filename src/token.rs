@@ -26,5 +26,21 @@ pub enum Token {
     LeftBrace,  // {
     RightBrace, // }
     
+    // Additional Punctuation
+    Semicolon,  // ;
+    Comma,      // ,
+    
+    // Additional Operators
+    GreaterThan,    // >
+    LessThan,       // <
+    GreaterEqual,   // >=
+    LessEqual,      // <=
+    NotEqual,       // !=
+    
+    // Additional Keywords
+    Let,        // चल (variable declaration)
+    True,       // सत्य
+    False,      // असत्य
+    
     EOF,
 }

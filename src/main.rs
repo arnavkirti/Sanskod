@@ -28,7 +28,9 @@ fn main() {
         let mut parser = Parser::new(tokens);
         if let Some(ast) = parser.parse() {
             // Execute the AST using the interpreter
-            Interpreter::run(&ast);
+            let interpreter = Interpreter::new();
+            let mut interpreter = interpreter;
+            interpreter.run(&ast);
         }
     }
 }

@@ -5,6 +5,20 @@ pub enum ASTNode {
     Print(String),
     Number(i64),
     Variable(String, i64),
+    
+    // Variable operations
+    VarDeclaration(String, Box<ASTNode>),  // variable declaration
+    VarAssignment(String, Box<ASTNode>),   // variable assignment
+    VarReference(String),                  // variable usage
+    
+    // Control flow
+    If(Box<ASTNode>, Vec<ASTNode>, Option<Vec<ASTNode>>), // condition, then_block, else_block
+    While(Box<ASTNode>, Vec<ASTNode>),    // condition, block
+    
+    // Values
+    Boolean(bool),
+    
+    // Expressions
     BinaryOp(Box<ASTNode>, Token, Box<ASTNode>),
 }
 

@@ -27,21 +27,43 @@ impl Lexer {
         let mut tokens = Vec::new();
         while let Some(ch) = self.next_char() {
             match ch {
-                ' ' | '\t' | '\n' | '\r' => continue, // Ignore whitespace
+                ' ' | '\t' | '\n' | '\r' => continue,
                 '+' => tokens.push(Token::Plus),
                 '-' => tokens.push(Token::Minus),
                 '*' => tokens.push(Token::Multiply),
                 '/' => tokens.push(Token::Divide),
-                '=' => {
-                    if let Some(next_ch) = self.next_char() {
-                        if next_ch == '=' {
-                            tokens.push(Token::Equals);
-                        } else {
-                            self.position -= 1;
-                            tokens.push(Token::Assign);
-                        }
+                ';' => tokens.push(Token::Semicolon),
+                ',' => tokens.push(Token::Comma),
+                '>' => {
+                    if let Some('=') = self.next_char() {
+                        tokens.push(Token::GreaterEqual);
                     } else {
+                        self.position -= 1;
+                        tokens.push(Token::GreaterThan);
+                    }
+                },
+                '<' => {
+                    if let Some('=') = self.next_char() {
+                        tokens.push(Token::LessEqual);
+                    } else {
+                        self.position -= 1;
+                        tokens.push(Token::LessThan);
+                    }
+                },
+                '=' => {
+                    if let Some('=') = self.next_char() {
+                        tokens.push(Token::Equals);
+                    } else {
+                        self.position -= 1;
                         tokens.push(Token::Assign);
+                    }
+                },
+                '!' => {
+                    if let Some('=') = self.next_char() {
+                        tokens.push(Token::NotEqual);
+                    } else {
+                        self.position -= 1;
+                        // Handle single '!' if needed
                     }
                 },
                 '(' => tokens.push(Token::LeftParen),
@@ -85,6 +107,9 @@ impl Lexer {
                         "kriya" => tokens.push(Token::Function),
                         "pratyavartanam" => tokens.push(Token::Return),
                         "chapyati" => tokens.push(Token::Print),
+                        "chal" => tokens.push(Token::Let),
+                        "satya" => tokens.push(Token::True),
+                        "asatya" => tokens.push(Token::False),
                         _ => tokens.push(Token::Identifier(identifier)),
                     }
                 }
@@ -131,6 +156,42 @@ mod tests {
             Token::LeftParen,
             Token::StringLiteral("Test".to_string()),
             Token::RightParen,
+            Token::EOF
+        ]);
+    }
+
+    #[test]
+    fn test_lexer_variable_declaration() {
+        let mut lexer = Lexer::new("chal x = 42;");
+        let tokens = lexer.tokenize();
+        assert_eq!(tokens, vec![
+            Token::Let,
+            Token::Identifier("x".to_string()),
+            Token::Assign,
+            Token::Number(42.0),
+            Token::Semicolon,
+            Token::EOF
+        ]);
+    }
+
+    #[test]
+    fn test_lexer_comparison() {
+        let mut lexer = Lexer::new("x >= 10");
+        let tokens = lexer.tokenize();
+        assert_eq!(tokens, vec![
+            Token::Identifier("x".to_string()),
+            Token::GreaterEqual,
+            Token::Number(10.0),
+            Token::EOF
+        ]);
+    }
+
+    #[test]
+    fn test_lexer_boolean() {
+        let mut lexer = Lexer::new("satya");
+        let tokens = lexer.tokenize();
+        assert_eq!(tokens, vec![
+            Token::True,
             Token::EOF
         ]);
     }
